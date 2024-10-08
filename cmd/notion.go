@@ -14,6 +14,7 @@ import (
 )
 
 var save bool
+var filePath string
 
 // notionCmd represents the notion command
 var notionCmd = &cobra.Command{
@@ -38,11 +39,15 @@ Notionの変更内容をローカルファイルに反映します。
         }
 
         if save {
+            // Check if filePath is provided
+            if filePath == "" {
+                log.Fatal("File path must be specified with -p flag.")
+            }
+
             // Markdownファイルを読み込む
-            filePath := "./a.md" // 読み込むMarkdownファイルのパス
             content, err := ioutil.ReadFile(filePath)
             if err != nil {
-                log.Fatal("Error reading file:", err)
+                log.Fatalf("Error reading file %s: %v", filePath, err)
             }
 
             // Notion APIリクエスト用のペイロード作成
@@ -124,4 +129,6 @@ func init() {
 
     // Define flags and configuration settings.
     notionCmd.Flags().BoolVarP(&save, "save", "s", false, "Save local Markdown file to Notion")
+    notionCmd.Flags().StringVarP(&filePath, "path", "p", "", "Path to the Markdown file to save")
 }
+
