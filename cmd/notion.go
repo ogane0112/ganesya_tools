@@ -8,6 +8,7 @@ import (
     "log"
     "net/http"
     "os"
+	"path/filepath"
 
     "github.com/joho/godotenv"
     "github.com/spf13/cobra"
@@ -46,6 +47,8 @@ Notionの変更内容をローカルファイルに反映します。
 
             // Markdownファイルを読み込む
             content, err := ioutil.ReadFile(filePath)
+			//ファイル名のみを取得する処理
+			fileName := filepath.Base(filePath)
             if err != nil {
                 log.Fatalf("Error reading file %s: %v", filePath, err)
             }
@@ -59,7 +62,7 @@ Notionの変更内容をローカルファイルに反映します。
                     "title": []map[string]interface{}{
                         {
                             "text": map[string]string{
-                                "content": "New Inline Page", // Inline page title
+                                "content": fileName, // Inline page title
                             },
                         },
                     },
